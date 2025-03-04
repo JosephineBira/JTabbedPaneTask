@@ -1,25 +1,20 @@
 pipeline {
     agent any
-
+    
     tools {
-        maven 'Maven-3.9.9' // Ensure Maven is installed in Jenkins
-    }
-
-    environment {
-        GIT_REPO = 'https://github.com/JosephineBira/JTabbedPaneTask.git'
-        BRANCH = 'main' // Change this if the default branch is different
+        maven 'Maven-3.9.9'  // Ensure this matches Jenkins configuration
     }
 
     stages {
-        stage('Clone Repository') {
+        stage('Checkout SCM') {
             steps {
-                git branch: "${BRANCH}", url: "${GIT_REPO}"
+                git branch: 'main', url: 'https://github.com/JosephineBira/JTabbedPaneTask.git'
             }
         }
 
         stage('Build with Maven') {
             steps {
-                sh 'mvn clean package'
+                sh 'mvn clean install'
             }
         }
 
@@ -37,11 +32,14 @@ pipeline {
     }
 
     post {
+        always {
+            echo 'Build completed!'
+        }
         success {
-            echo 'Build Successful! '
+            echo 'Build successful 🎉'
         }
         failure {
-            echo 'Build Failed! '
+            echo 'Build failed ❌'
         }
     }
 }
