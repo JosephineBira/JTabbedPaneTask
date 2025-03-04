@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Checkout SCM') {
             steps {
-                git branch: 'master', url: 'https://github.com/JosephineBira/JTabbedPaneTask.git'
+                git branch: 'master', url: 'https://github.com/JosephineBira/JTabbedPaneTask'
             }
         }
 
