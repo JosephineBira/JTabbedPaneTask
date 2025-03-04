@@ -1,32 +1,53 @@
 pipeline {
     agent any
-    
+
     tools {
-        maven 'Maven-3.8.1'  // Ensure this matches Jenkins configuration
+        maven 'MAVEN_HOME'  // Use the configured Maven installation in Jenkins
+    }
+
+    environment {
+        POM_PATH = 'pom.xml'  // Update this path if needed
     }
 
     stages {
         stage('Checkout SCM') {
             steps {
-                git branch: 'master', url: 'https://github.com/JosephineBira/JTabbedPaneTask'
+                git branch: 'master', 
+                    credentialsId: 'github-credentials', 
+                    url: 'https://github.com/JosephineBira/JTabbedPaneTask.git'
             }
         }
 
-        stage('Build with Maven') {
+        stage('Build') {
             steps {
-                sh 'mvn clean install'
+                script {
+                    echo "Building the project with Maven..."
+                    sh "mvn -f ${POM_PATH} clean install"
+                }
             }
         }
 
-        stage('Run Tests') {
+        stage('Test') {
             steps {
-                sh 'mvn test'
+                script {
+                    echo "Running tests..."
+                    sh "mvn -f ${POM_PATH} test"
+                }
             }
         }
 
-        stage('Archive Artifacts') {
+        stage('Package') {
             steps {
-                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+                script {
+                    echo "Packaging the application..."
+                    sh "mvn -f ${POM_PATH} package"
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo "Deployment stage - customize this step as needed."
             }
         }
     }
@@ -36,10 +57,10 @@ pipeline {
             echo 'Build completed!'
         }
         success {
-            echo 'Build successful 🎉'
+            echo 'Pipeline executed successfully! 🎉'
         }
         failure {
-            echo 'Build failed ❌'
+            echo 'Pipeline failed! Check logs. ❌'
         }
     }
 }
