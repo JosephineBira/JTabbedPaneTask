@@ -1,10 +1,14 @@
 pipeline {
     agent any
+    
+    tools {
+        maven 'Maven-3.8.1'  // Ensure this matches Jenkins configuration
+    }
 
     stages {
         stage('Checkout SCM') {
             steps {
-                git branch: 'master', url: 'https://github.com/JosephineBira/JTabbedPaneTask'
+                git branch: 'master', url: 'https://github.com/JosephineBira/JTabbedPaneTask.git'
             }
         }
 
